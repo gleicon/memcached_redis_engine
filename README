@@ -1,0 +1,29 @@
+redis engine for memcached
+exercise over engine-pu API
+
+- fetch memcached source code, engine-pu branch: https://github.com/memcached/memcached/tree/engine-pu
+$ ./confih/autorun.sh
+$ ./configure --prefix=/opt/memcached
+$ make all install
+$ /opt/memcached/bin/memcached -E /opt//memcached/lib/memcached/default_engine.so
+
+in a different term:
+
+$ memcapable
+
+All tests should pass. your memcached is ok and can switch backends. Now for fs_engine:
+
+$ cd memcached_redis_engine
+
+edit Makefile and make sure that hiredis is installed. mine is installed thru brew to test.
+
+$ make clean all
+$ /opt/memcached/bin/memcached -E redis_engine.so
+
+in a different term
+
+$ memcapable
+
+currently get and set (store and get internally) are working.
+most of redis ocnfigurations are hardcoded, lacks a connection pool, should use the async hiredis interface and clean up on the connection create/destroy.
+there's also a concurrency bug when using memslap non-blocking.
